@@ -2,6 +2,7 @@
 
 Outputs (committed):
     assets/logo.png            512x512 mark
+    assets/social-preview-art.png  AI-generated routing illustration source
     assets/social-preview.png  1280x640 repository social card
     docs/how-it-works.svg      static routing diagram for the README
     docs/how-it-works.html     self-contained animated explainer page
@@ -120,19 +121,22 @@ def tier_pill(d: ImageDraw.ImageDraw, box, label, sub, bg, fg) -> None:
 
 def make_social_preview(path: Path) -> None:
     W, H = 1280, 640
-    img = Image.new("RGB", (W, H), BONE)
+    art = Image.open(ROOT / "assets" / "social-preview-art.png").convert("RGB")
+    img = art.resize((W, H), Image.Resampling.LANCZOS)
     d = ImageDraw.Draw(img)
-    d.rectangle((0, 0, W, H), outline=HAIRLINE, width=2)
-    d.rectangle((1, 1, W - 2, 10), fill=INK)  # top brand bar
+    # The generated visual leaves the left third clear. This panel keeps the
+    # repository name readable in small social-feed previews.
+    d.rectangle((14, 14, 620, H - 14), fill=BONE)
+    d.rectangle((0, 0, W - 1, H - 1), outline=INK, width=2)
+    d.rectangle((14, 14, 620, H - 14), outline=HAIRLINE, width=2)
 
-    # Left column
-    d.text((72, 96), "CLOUDFLARE CLEF  /  DECISION MODEL", font=font(MONO, 21), fill=MUTED)
-    d.text((66, 138), "clef-router", font=font(SERIF_BOLD, 108), fill=INK)
-    d.line((72, 282, 560, 282), fill=HAIRLINE, width=2)
+    d.text((62, 78), "CLOUDFLARE CLEF  /  DECISION MODEL", font=font(MONO, 19), fill=MUTED)
+    d.text((56, 118), "clef-router", font=font(SERIF_BOLD, 88), fill=INK)
+    d.line((62, 238, 552, 238), fill=HAIRLINE, width=2)
     d.text(
-        (72, 310),
+        (62, 264),
         "Route each prompt to the affordable model\nwhen it is enough, and to the frontier\nmodel when it matters.",
-        font=font(SANS, 30), fill="#2F3437", spacing=10,
+        font=font(SANS, 27), fill="#2F3437", spacing=9,
     )
     d.text(
         (72, 470),
@@ -144,21 +148,6 @@ def make_social_preview(path: Path) -> None:
         "BFCL 98.8 (clef-flash) vs 38.1 (laya)  —  Decision Index 0.2.1",
         font=font(MONO, 22), fill=BLUE_FG,
     )
-
-    # Right diagram card
-    rounded_card(d, (720, 120, 1208, 560), radius=18, fill=CARD)
-    d.text((756, 152), "POST /v1/chat/completions", font=font(MONO, 21), fill=MUTED)
-    rounded_card(d, (756, 196, 1172, 260), radius=12, fill=BONE)
-    d.text((776, 214), '{"messages": ["Refund my order #4512"]}', font=font(MONO, 20), fill=INK)
-    # arrow into gate
-    d.line((964, 260, 964, 300), fill=INK, width=4)
-    d.polygon([(956, 296), (972, 296), (964, 310)], fill=INK)
-    rounded_card(d, (872, 314, 1056, 372), radius=12, fill=INK)
-    d.text((928, 328), "CLEF", font=font(MONO_BOLD, 24), fill=BONE)
-    d.line((872, 396, 812, 436), fill=GREEN_FG, width=4)
-    d.line((1056, 396, 1116, 436), fill=RED_FG, width=4)
-    tier_pill(d, (740, 444, 952, 520), "CHEAP", "8B class, most prompts", GREEN_BG, GREEN_FG)
-    tier_pill(d, (976, 444, 1188, 520), "FRONTIER", "reasoning, code, stakes", RED_BG, RED_FG)
 
     path.parent.mkdir(parents=True, exist_ok=True)
     img.save(path)
@@ -210,7 +199,7 @@ HOW_IT_WORKS_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 4
 
 def make_svg(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(HOW_IT_WORKS_SVG, encoding="utf-8")
+    path.write_text(HOW_IT_WORKS_SVG, encoding="utf-8", newline="\n")
 
 
 # --------------------------------------------------------------------------
@@ -339,7 +328,7 @@ HOW_IT_WORKS_HTML = """<!doctype html>
 
 def make_html(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(HOW_IT_WORKS_HTML, encoding="utf-8")
+    path.write_text(HOW_IT_WORKS_HTML, encoding="utf-8", newline="\n")
 
 
 # --------------------------------------------------------------------------
@@ -518,6 +507,7 @@ def make_video(out_dir: Path, skip: bool) -> None:
         "enough, and to the frontier model when it matters. OpenAI-compatible, "
         "powered by Cloudflare's Clef decision model.\n",
         encoding="utf-8",
+        newline="\n",
     )
 
 

@@ -1,4 +1,10 @@
 <p align="center">
+  <img src="assets/logo.png" alt="clef-router logo" width="92" />
+</p>
+
+<h1 align="center">clef-router</h1>
+
+<p align="center">
   <img src="assets/social-preview.png" alt="clef-router sends each prompt to the cheap or the frontier model" width="100%" />
 </p>
 
@@ -12,17 +18,44 @@
   <a href="https://pypi.org/project/clef-router/"><img src="https://img.shields.io/pypi/v/clef-router?label=PyPI&color=111111" alt="PyPI" /></a>
   <a href="pyproject.toml"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-346538" alt="Apache 2.0 license" /></a>
+  <a href="https://www.kaggle.com/code/gjusev/clef-router-evals"><img src="https://img.shields.io/badge/Kaggle-CPU%20notebook-20BEFF?logo=kaggle&logoColor=white" alt="Kaggle CPU notebook" /></a>
+  <a href="https://www.kaggle.com/code/gjusev/clef-router-gpu-evals"><img src="https://img.shields.io/badge/Kaggle-T4%20GPU%20notebook-20BEFF?logo=kaggle&logoColor=white" alt="Kaggle T4 GPU notebook" /></a>
 </p>
 
 <p align="center">
+  <a href="#demo"><strong>Demo</strong></a> &middot;
   <a href="#quickstart"><strong>Get started</strong></a> ·
   <a href="#how-it-works"><strong>How it works</strong></a> ·
   <a href="#benchmarks"><strong>Benchmarks</strong></a> ·
+  <a href="#reproduce-on-kaggle"><strong>Kaggle</strong></a> ·
   <a href="#clef-vs-laya"><strong>clef vs laya</strong></a> ·
   <a href="#limitations"><strong>Limitations</strong></a>
 </p>
 
 ---
+
+## Demo
+
+<p align="center">
+  <a href="brag-output/brag.mp4" title="Watch the 12-second clef-router demo">
+    <img src="brag-output/brag.jpg" alt="Preview of clef-router routing prompts between cheap and frontier model tiers" width="100%" />
+  </a><br />
+  <sub><strong>▶ <a href="brag-output/brag.mp4">Watch the 12-second product demo</a></strong> &mdash; routing decisions, policy safeguards, and measured results.</sub>
+</p>
+
+GitHub READMEs do not reliably render repository MP4s with native controls, so
+the video is presented as a clickable poster frame; it opens the generated
+[`brag.mp4`](brag-output/brag.mp4) directly.
+
+### At a glance
+
+| | |
+| --- | --- |
+| **Purpose** | Choose an affordable or frontier completion tier before your app calls the model. |
+| **Interface** | OpenAI-compatible proxy, Python client, async client, and CLI. |
+| **Decision model** | [Cloudflare Clef](https://huggingface.co/Cloudflare/clef), using one joint forward pass. |
+| **Safety policy** | Low confidence, urgent prompts, unknown answers, and parse failures escalate to frontier. |
+| **Evidence** | Committed fixtures, reproducible local evaluation, and public Kaggle CPU/T4 runs. |
 
 ## Quickstart
 
@@ -82,6 +115,13 @@ async with AsyncClefRouter() as router:
 ```
 
 ## How it works
+
+<p align="center">
+  <a href="docs/how-it-works.html">
+    <img src="docs/how-it-works.svg" alt="A client prompt enters Clef and is routed to either the cheap or frontier tier" width="100%" />
+  </a><br />
+  <sub>Static architecture overview. <a href="docs/how-it-works.html">Open the animated explainer</a>.</sub>
+</p>
 
 ```
    your app (OpenAI SDK)          your app (library / CLI)
@@ -274,13 +314,15 @@ Stated plainly, because routing libraries that hide these waste your time.
 
 ## Reproduce on Kaggle
 
-Two public kernels rerun the evaluation on Kaggle hardware:
+Two public notebooks rerun the evaluation on Kaggle hardware. Open them
+directly, fork them, or push the matching local kernel directory with the
+Kaggle CLI:
 
-- `evals/kaggle-kernel-gpu/` — GPU (T4): downloads the real `clef-flash`
+- [**GPU (T4) notebook — `gjusev/clef-router-gpu-evals`**](https://www.kaggle.com/code/gjusev/clef-router-gpu-evals) (`evals/kaggle-kernel-gpu/`): downloads the real `clef-flash`
   weights, routes every labeled prompt through the model, and writes
   `routing-gpu-eval.json`. Needs a GPU-verified account; about 15 minutes
   and a slice of your 30 h weekly quota.
-- `evals/kaggle-kernel/` — CPU: replays the committed fixtures through the
+- [**CPU notebook — `gjusev/clef-router-evals`**](https://www.kaggle.com/code/gjusev/clef-router-evals) (`evals/kaggle-kernel/`): replays the committed fixtures through the
   policy pipeline in about two minutes, no GPU or credentials.
 
 ```bash

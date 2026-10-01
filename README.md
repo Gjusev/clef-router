@@ -134,8 +134,9 @@ routing marketing. We keep them separate.
 | Policy accuracy | **100%** (n=42) | Does the tier policy map labeled decisions to the right tier. Fixtures committed in `evals/data/`. |
 | Escalation precision | **1.00** | Of the frontier escalations, how many were justified. 0 over-escalations, 0 under-routes. |
 | Decision overhead (library) | **p50 0.12 ms / p95 0.26 ms / p99 0.47 ms** | Client-side cost of parsing and policy. Excludes the network call. |
-| Cost per 1k decisions | **$0.033** | Mean ~137 input tokens at Cloudflare's published $0.24 per million input tokens. |
+| Cost per 1k decisions | **$0.078 measured** ($0.033 estimated from fixtures) | Real mean is 324 input tokens per decision at Cloudflare's published $0.24 per million input tokens. The fixture estimate undershot; the GPU rerun below measured the real token counts. |
 | Kaggle rerun (Linux, clean box) | **accuracy 1.00, p50 0.34 ms** | Same dataset and code, executed by the public kernel `gjusev/clef-router-evals`; log and JSON committed in `evals/results/`. |
+| **Real model, local weights** (Kaggle T4) | **accuracy 92.9% (39/42), warm p50 506 ms** | `clef-flash` weights in 4-bit on one T4, same prompts and policy, no Cloudflare API. The 3 misses: two genuinely ambiguous prompts routed cheap ("write a sonnet", "what about the other approach") and one safe over-escalation of a Python question. Full trace in `evals/results/routing-gpu-eval.json`. |
 
 **What Cloudflare measured** (Decision Index 0.2.1, from the
 [model card](https://huggingface.co/Cloudflare/clef); that suite scores the
@@ -242,28 +243,34 @@ Stated plainly, because routing libraries that hide these waste your time.
   chat model. Clients that want the answer call the chosen model themselves.
 - No streaming. `POST /v1/chat/completions` is request/response. SSE
   pass-through is on the roadmap.
-- The committed accuracy number is policy accuracy on 42 labeled fixtures,
-  not a model benchmark. Use `--mode api` with real credentials for
-  end-to-end numbers on your own workload, or run the Decision Index suite
-  for model quality.
+- The committed policy number is accuracy on 42 labeled fixtures. The GPU
+  rerun measures the real model on the same 42 prompts (92.9%), which is
+  still a small set: neither number is a Decision-Index-grade benchmark. Use
+  `--mode api` with real credentials to measure your own workload.
 - The tier mapping reads the `team` and `urgency` question ids. Custom
   question sets work with `decide()`; `route()` still expects those ids.
 - Latency depends on your network to Cloudflare. The 38.8 ms median is
   Cloudflare's measurement; add your round trip.
 - Images are accepted by the API (`decide()`, max 4) but the routing
   question set is text-only today.
-- Running `Cloudflare/clef` weights locally is possible (Apache-2.0) but the
-  model card lists a single H200 as the tested environment; the Kaggle kernel
-  in `evals/kaggle-kernel/` measures policy overhead on CPU instead.
+- Running `Cloudflare/clef-flash` weights locally is possible (Apache-2.0,
+  9.4B) and is exactly what `evals/kaggle-kernel-gpu/` does on one T4 in
+  4-bit; expect ~500 ms per decision there versus 38.8 ms median on
+  Cloudflare's unquantized datacenter GPUs.
 
 ## Reproduce on Kaggle
 
-`evals/kaggle-kernel/` holds a kernel that clones this repository and reruns
-the offline evaluation on clean Kaggle hardware, writing
-`/kaggle/working/routing-eval.json`:
+Two public kernels rerun the evaluation on Kaggle hardware:
+
+- `evals/kaggle-kernel-gpu/` — GPU (T4): downloads the real `clef-flash`
+  weights, routes every labeled prompt through the model, and writes
+  `routing-gpu-eval.json`. Needs a GPU-verified account; about 15 minutes
+  and a slice of your 30 h weekly quota.
+- `evals/kaggle-kernel/` — CPU: replays the committed fixtures through the
+  policy pipeline in about two minutes, no GPU or credentials.
 
 ```bash
-KAGGLE_API_TOKEN=... python -m kaggle kernels push -p evals/kaggle-kernel
+KAGGLE_API_TOKEN=... python -m kaggle kernels push -p evals/kaggle-kernel-gpu
 ```
 
 ## Development

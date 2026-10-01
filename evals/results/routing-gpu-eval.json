@@ -1,0 +1,625 @@
+{
+  "meta": {
+    "mode": "gpu-local",
+    "model": "Cloudflare/clef-flash (local weights, 4-bit nf4, fp16 compute)",
+    "hardware": "Tesla T4\nTesla T4",
+    "package_version": "0.2.0",
+    "min_confidence": 0.45,
+    "n": 42,
+    "warmup_calls_excluded": 2,
+    "notes": [
+      "measures the real model over labeled prompts; policy and question set are the library's own",
+      "latency includes tokenization and the joint-schema forward pass on one quantized T4; the hosted endpoint (38.8 ms median per Cloudflare) runs unquantized on datacenter GPUs"
+    ]
+  },
+  "metrics": {
+    "n": 42,
+    "accuracy": 0.9286,
+    "escalations": {
+      "under_routes": 2,
+      "over_escalations": 1,
+      "frontier_expected": 23
+    },
+    "latency_ms": {
+      "cold_first_call": 3209.3,
+      "p50": 505.9,
+      "p95": 769.5,
+      "p99": 786.9
+    },
+    "cost": {
+      "input_tokens_mean": 323.6,
+      "hosted_equivalent_cost_per_1k_calls_usd": 0.0777,
+      "local_gpu_cost_per_1k_calls_usd": 0.0
+    }
+  },
+  "rows": [
+    {
+      "id": "greet-001",
+      "category": "greeting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.96",
+      "confidence": 0.9587,
+      "latency_ms": 3209.3,
+      "usage": {
+        "input_tokens": 320,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "greet-002",
+      "category": "greeting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.89",
+      "confidence": 0.8885,
+      "latency_ms": 751.5,
+      "usage": {
+        "input_tokens": 322,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "greet-003",
+      "category": "greeting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.96",
+      "confidence": 0.9609,
+      "latency_ms": 764.3,
+      "usage": {
+        "input_tokens": 316,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "lookup-001",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.98",
+      "confidence": 0.9822,
+      "latency_ms": 751.0,
+      "usage": {
+        "input_tokens": 318,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "lookup-002",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.96",
+      "confidence": 0.9611,
+      "latency_ms": 486.1,
+      "usage": {
+        "input_tokens": 320,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "lookup-003",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.97",
+      "confidence": 0.9747,
+      "latency_ms": 750.5,
+      "usage": {
+        "input_tokens": 321,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "lookup-004",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.97",
+      "confidence": 0.9679,
+      "latency_ms": 483.6,
+      "usage": {
+        "input_tokens": 318,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "lookup-005",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.96",
+      "confidence": 0.965,
+      "latency_ms": 487.9,
+      "usage": {
+        "input_tokens": 321,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "translate-001",
+      "category": "translation",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.96",
+      "confidence": 0.9645,
+      "latency_ms": 487.5,
+      "usage": {
+        "input_tokens": 321,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "translate-002",
+      "category": "translation",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.92",
+      "confidence": 0.9215,
+      "latency_ms": 750.4,
+      "usage": {
+        "input_tokens": 323,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "rewrite-001",
+      "category": "rewriting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.90",
+      "confidence": 0.9049,
+      "latency_ms": 747.3,
+      "usage": {
+        "input_tokens": 324,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "rewrite-002",
+      "category": "rewriting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.91",
+      "confidence": 0.9052,
+      "latency_ms": 489.6,
+      "usage": {
+        "input_tokens": 324,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "summarize-001",
+      "category": "summarization",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.85",
+      "confidence": 0.8545,
+      "latency_ms": 486.0,
+      "usage": {
+        "input_tokens": 323,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "summarize-002",
+      "category": "summarization",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.67",
+      "confidence": 0.6733,
+      "latency_ms": 485.7,
+      "usage": {
+        "input_tokens": 322,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "qa-001",
+      "category": "simple_qa",
+      "expected": "cheap",
+      "tier": "frontier",
+      "correct": false,
+      "reason": "team selected frontier",
+      "confidence": 0.7286,
+      "latency_ms": 485.8,
+      "usage": {
+        "input_tokens": 324,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "qa-002",
+      "category": "simple_qa",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.93",
+      "confidence": 0.9258,
+      "latency_ms": 485.0,
+      "usage": {
+        "input_tokens": 321,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "uncertain-001",
+      "category": "low_confidence",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.511,
+      "latency_ms": 485.4,
+      "usage": {
+        "input_tokens": 321,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "uncertain-002",
+      "category": "low_confidence",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.8694,
+      "latency_ms": 484.4,
+      "usage": {
+        "input_tokens": 320,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "uncertain-003",
+      "category": "low_confidence",
+      "expected": "frontier",
+      "tier": "cheap",
+      "correct": false,
+      "reason": "team selected cheap with confidence 0.51",
+      "confidence": 0.5124,
+      "latency_ms": 748.7,
+      "usage": {
+        "input_tokens": 319,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "urgent-001",
+      "category": "incident",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.7972,
+      "latency_ms": 486.2,
+      "usage": {
+        "input_tokens": 320,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "urgent-002",
+      "category": "incident",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.8677,
+      "latency_ms": 485.0,
+      "usage": {
+        "input_tokens": 320,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "urgent-003",
+      "category": "incident",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.8245,
+      "latency_ms": 487.6,
+      "usage": {
+        "input_tokens": 324,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "code-001",
+      "category": "coding",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9479,
+      "latency_ms": 485.3,
+      "usage": {
+        "input_tokens": 323,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "code-002",
+      "category": "coding",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9724,
+      "latency_ms": 769.5,
+      "usage": {
+        "input_tokens": 329,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "code-003",
+      "category": "coding",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9085,
+      "latency_ms": 749.0,
+      "usage": {
+        "input_tokens": 328,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "code-004",
+      "category": "coding",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9862,
+      "latency_ms": 505.0,
+      "usage": {
+        "input_tokens": 322,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "reason-001",
+      "category": "reasoning",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.8112,
+      "latency_ms": 769.9,
+      "usage": {
+        "input_tokens": 340,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "reason-002",
+      "category": "reasoning",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9707,
+      "latency_ms": 767.0,
+      "usage": {
+        "input_tokens": 326,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "reason-003",
+      "category": "reasoning",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9602,
+      "latency_ms": 769.1,
+      "usage": {
+        "input_tokens": 330,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "reason-004",
+      "category": "reasoning",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9551,
+      "latency_ms": 767.5,
+      "usage": {
+        "input_tokens": 331,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "multi-001",
+      "category": "multi_step",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9674,
+      "latency_ms": 505.9,
+      "usage": {
+        "input_tokens": 326,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "multi-002",
+      "category": "multi_step",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9773,
+      "latency_ms": 506.4,
+      "usage": {
+        "input_tokens": 331,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "creative-001",
+      "category": "creative",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.7019,
+      "latency_ms": 769.4,
+      "usage": {
+        "input_tokens": 325,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "creative-002",
+      "category": "creative",
+      "expected": "frontier",
+      "tier": "cheap",
+      "correct": false,
+      "reason": "team selected cheap with confidence 0.58",
+      "confidence": 0.5804,
+      "latency_ms": 505.3,
+      "usage": {
+        "input_tokens": 323,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "analysis-001",
+      "category": "analysis",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9703,
+      "latency_ms": 511.9,
+      "usage": {
+        "input_tokens": 325,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "analysis-002",
+      "category": "analysis",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9437,
+      "latency_ms": 786.9,
+      "usage": {
+        "input_tokens": 334,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "highstakes-001",
+      "category": "high_stakes",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9554,
+      "latency_ms": 505.9,
+      "usage": {
+        "input_tokens": 323,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "highstakes-002",
+      "category": "high_stakes",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.9742,
+      "latency_ms": 506.0,
+      "usage": {
+        "input_tokens": 323,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "calm-001",
+      "category": "routine",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.67",
+      "confidence": 0.6692,
+      "latency_ms": 507.4,
+      "usage": {
+        "input_tokens": 325,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "calm-002",
+      "category": "routine",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.94",
+      "confidence": 0.9389,
+      "latency_ms": 483.1,
+      "usage": {
+        "input_tokens": 320,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "calm-003",
+      "category": "routine",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "reason": "team selected cheap with confidence 0.86",
+      "confidence": 0.8574,
+      "latency_ms": 508.5,
+      "usage": {
+        "input_tokens": 325,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "failsafe-001",
+      "category": "fail_safe",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "reason": "team selected frontier",
+      "confidence": 0.5726,
+      "latency_ms": 503.3,
+      "usage": {
+        "input_tokens": 320,
+        "output_tokens": 0
+      }
+    }
+  ]
+}

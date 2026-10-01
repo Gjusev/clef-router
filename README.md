@@ -135,6 +135,7 @@ routing marketing. We keep them separate.
 | Escalation precision | **1.00** | Of the frontier escalations, how many were justified. 0 over-escalations, 0 under-routes. |
 | Decision overhead (library) | **p50 0.12 ms / p95 0.26 ms / p99 0.47 ms** | Client-side cost of parsing and policy. Excludes the network call. |
 | Cost per 1k decisions | **$0.033** | Mean ~137 input tokens at Cloudflare's published $0.24 per million input tokens. |
+| Kaggle rerun (Linux, clean box) | **accuracy 1.00, p50 0.34 ms** | Same dataset and code, executed by the public kernel `gjusev/clef-router-evals`; log and JSON committed in `evals/results/`. |
 
 **What Cloudflare measured** (Decision Index 0.2.1, from the
 [model card](https://huggingface.co/Cloudflare/clef); that suite scores the

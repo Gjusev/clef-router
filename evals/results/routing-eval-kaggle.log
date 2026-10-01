@@ -1,0 +1,19 @@
+[{"stream_name":"stdout","time":1.284545706,"data":"$ git clone --depth 1 https://github.com/Gjusev/clef-router.git\n"}
+,{"stream_name":"stderr","time":1.354197386,"data":"Cloning into 'clef-router'...\n"}
+,{"stream_name":"stdout","time":2.6635743229999997,"data":"$ /usr/bin/python3 -m pip install -q --no-input ./clef-router[dev]\n"}
+,{"stream_name":"stdout","time":16.418769997,"data":"$ /usr/bin/python3 clef-router/evals/run_eval.py --out /kaggle/working/routing-eval.json\n"}
+,{"stream_name":"stdout","time":18.239594697,"data":"[mock] n=42 accuracy=100.00% latency p50/p95/p99=0.342/0.549/1.412 ms cost/1k=$0.033\n"}
+,{"stream_name":"stdout","time":18.23963447,"data":"wrote /kaggle/working/routing-eval.json\n"}
+,{"stream_name":"stdout","time":18.414531893,"data":"=== Verdict ===\n"}
+,{"stream_name":"stdout","time":18.414571168,"data":"rows: 42\n"}
+,{"stream_name":"stdout","time":18.414576731,"data":"policy accuracy: 100.00%\n"}
+,{"stream_name":"stdout","time":18.414581515,"data":"latency p50/p95/p99 ms: 0.342 / 0.549 / 1.412\n"}
+,{"stream_name":"stdout","time":18.41458593,"data":"cost per 1k decisions: $0.033\n"}
+,{"stream_name":"stdout","time":18.414590459,"data":"over-escalations: 0 under-routes: 0\n"}
+,{"stream_name":"stderr","time":21.504335774,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":21.504380394000002,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":21.984044405,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":21.984080709,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":22.837093629,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":24.814554015,"data":"[NbConvertApp] Writing 279632 bytes to __results__.html\n"}
+]

@@ -1,0 +1,14 @@
+{
+  "id": "gjusev/clef-router-gpu-evals",
+  "title": "clef-router-gpu-evals",
+  "code_file": "script.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": false,
+  "enable_gpu": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "enable_internet": true,
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

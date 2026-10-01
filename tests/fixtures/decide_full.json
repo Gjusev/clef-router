@@ -1,0 +1,25 @@
+{
+  "result": {
+    "model": "clef",
+    "answers": {
+      "urgency": {"type": "noul", "noul": 0.44},
+      "team": {
+        "type": "choice",
+        "choice": "cheap",
+        "probabilities": {"cheap": 0.62, "frontier": 0.38},
+        "confidence": 0.62
+      },
+      "quality": {
+        "type": "score",
+        "score": 3.0,
+        "legend": {"1": "poor", "2": "fair", "3": "good", "4": "excellent"},
+        "probabilities": {"1": 0.05, "2": 0.2, "3": 0.5, "4": 0.25},
+        "confidence": 0.55
+      }
+    },
+    "usage": {"input_tokens": 320, "output_tokens": 22}
+  },
+  "success": true,
+  "errors": [],
+  "messages": []
+}

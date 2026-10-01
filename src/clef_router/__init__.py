@@ -1,93 +1,91 @@
-"""clef-router: Route prompts between cheap and frontier LLMs using Cloudflare's Clef."""
+"""clef-router: Route prompts between cheap and frontier LLMs using Cloudflare's Clef.
 
-import os
-from dataclasses import dataclass, field
-from typing import Optional
+Quickstart as a library::
 
-import httpx
+    from clef_router import ClefRouter
 
+    router = ClefRouter()  # reads CLEF_ACCOUNT_ID / CLEF_API_TOKEN
+    routing = router.route("What is the capital of France?")
+    print(routing.tier)  # "cheap" or "frontier"
 
-@dataclass
-class RouteResult:
-    tier: str
-    complexity: str
-    confidence: float
-    reason: str
-    raw_response: dict = field(default_factory=dict, repr=False)
+Quickstart as an OpenAI-compatible proxy::
 
+    clef-router --port 8000   # POST /v1/chat/completions, /v1/decide, /healthz
 
-@dataclass
-class ClefRouter:
-    account_id: str = field(default_factory=lambda: os.environ.get("CLEF_ACCOUNT_ID", ""))
-    api_token: str = field(default_factory=lambda: os.environ.get("CLEF_API_TOKEN", ""))
-    model: str = "@cf/cloudflare/clef-flash"
-    base_url: str = "https://api.cloudflare.com/client/v4"
-    min_confidence: float = 0.45
-    timeout: float = 30.0
+The async mirror is :class:`AsyncClefRouter`, and
+:class:`clef_router.compat.ClefOpenAI` exposes an in-process
+``chat.completions`` interface that completes on the tier the decision
+picks.
+"""
 
-    def __post_init__(self):
-        if not self.account_id:
-            raise ValueError("Set CLEF_ACCOUNT_ID env var or pass account_id")
-        if not self.api_token:
-            raise ValueError("Set CLEF_API_TOKEN env var or pass api_token")
+from __future__ import annotations
 
-    @property
-    def _endpoint(self) -> str:
-        return f"{self.base_url}/accounts/{self.account_id}/ai/run/{self.model}"
+from ._version import __version__
+from .client import AsyncClefRouter, ClefRouter
+from .config import RouterConfig
+from .errors import (
+    ClefAPIError,
+    ClefAuthError,
+    ClefError,
+    ClefNetworkError,
+    ClefRateLimitError,
+    ClefResponseError,
+    ClefServerError,
+    ClefTimeoutError,
+    ConfigurationError,
+)
+from .models import (
+    DEFAULT_QUESTIONS,
+    ChoiceAnswer,
+    ClefDecision,
+    NoulAnswer,
+    RoutingDecision,
+    ScoreAnswer,
+    Usage,
+    derive_tier,
+)
+from .server import create_app
+from .transport import build_decide_payload
 
-    def _headers(self) -> dict:
-        return {"Authorization": f"Bearer {self.api_token}", "Content-Type": "application/json"}
+__all__ = [
+    "__version__",
+    "ClefRouter",
+    "AsyncClefRouter",
+    "RouterConfig",
+    "create_app",
+    "ClefDecision",
+    "RoutingDecision",
+    "NoulAnswer",
+    "ChoiceAnswer",
+    "ScoreAnswer",
+    "Usage",
+    "DEFAULT_QUESTIONS",
+    "derive_tier",
+    "build_decide_payload",
+    "ClefError",
+    "ConfigurationError",
+    "ClefAPIError",
+    "ClefAuthError",
+    "ClefRateLimitError",
+    "ClefServerError",
+    "ClefResponseError",
+    "ClefTimeoutError",
+    "ClefNetworkError",
+]
 
-    def route(self, prompt: str, context: Optional[str] = None) -> RouteResult:
-        state = f"User prompt to classify:\n{prompt}"
-        if context:
-            state = f"Context: {context}\n\n{state}"
-
-        payload = {
-            "state": state,
-            "questions": {
-                "complexity": {
-                    "type": "choice",
-                    "context": "How computationally complex is this prompt? "
-                               "simple = greeting, translation, basic lookup. "
-                               "standard = summarization, rewording, simple analysis. "
-                               "complex = reasoning, coding, multi-step, creative.",
-                    "choices": ["simple", "standard", "complex"],
-                },
-                "confidence": {
-                    "type": "score",
-                    "context": "How confident are you in this classification?",
-                    "levels": ["very_low", "low", "medium", "high", "very_high"],
-                },
-            },
-        }
-
-        resp = httpx.post(
-            self._endpoint, json=payload, headers=self._headers(), timeout=self.timeout,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-
-        result = data.get("result", {})
-        complexity = result.get("complexity", "complex")
-        conf_map = {"very_low": 0.1, "low": 0.3, "medium": 0.5, "high": 0.7, "very_high": 0.9}
-        confidence = conf_map.get(result.get("confidence", "low"), 0.3)
-
-        if confidence < self.min_confidence:
-            tier = "frontier"
-            reason = f"confidence {confidence:.2f} below threshold {self.min_confidence}, escalated"
-        elif complexity == "complex":
-            tier = "frontier"
-            reason = f"classified as {complexity}"
-        else:
-            tier = "cheap"
-            reason = f"classified as {complexity}, confidence {confidence:.2f}"
-
-        return RouteResult(
-            tier=tier, complexity=complexity, confidence=confidence,
-            reason=reason, raw_response=data,
-        )
+_LAZY_EXPORTS = {"create_app": "clef_router.server"}
 
 
-__version__ = "0.1.0"
-__all__ = ["ClefRouter", "RouteResult"]
+def __getattr__(name: str) -> object:
+    """Lazily export server symbols so ``import clef_router`` stays light.
+
+    The HTTP server pulls in FastAPI and uvicorn; resolving ``create_app``
+    only when accessed keeps the library import free of web-framework
+    overhead.
+    """
+    module_name = _LAZY_EXPORTS.get(name)
+    if module_name is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    import importlib
+
+    return getattr(importlib.import_module(module_name), name)

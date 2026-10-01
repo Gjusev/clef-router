@@ -1,0 +1,38 @@
+name: "clef-router regression gate"
+description: >-
+  Fail the build when routing accuracy regresses: compare a fresh
+  measurement JSON against a committed baseline. Pure Python; the
+  measurement itself is produced by your own step
+  (python evals/run_eval.py --out current.json).
+inputs:
+  current:
+    description: "Path to the fresh measurement JSON"
+    required: true
+  baseline:
+    description: "Path to the committed baseline JSON"
+    required: true
+  metrics:
+    description: >-
+      Metric specs, one per line: path:goal[:tolerance]. path is a dotted
+      path into the JSON, goal is max (accuracy-like) or min (ECE-like),
+      tolerance defaults to 0.02.
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Check accuracy metrics against the baseline
+      shell: bash
+      env:
+        METRICS: ${{ inputs.metrics }}
+        CURRENT: ${{ inputs.current }}
+        BASELINE: ${{ inputs.baseline }}
+      run: |
+        ARGS=()
+        while IFS= read -r spec; do
+          spec="${spec%$'\r'}"   # tolerate CRLF from workflow editors
+          [ -n "$spec" ] && ARGS+=(--metric "$spec")
+        done <<< "$METRICS"
+        python3 "${{ github.action_path }}/../../../scripts/check_regression.py" \
+          --current "$CURRENT" \
+          --baseline "$BASELINE" \
+          "${ARGS[@]}"

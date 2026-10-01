@@ -1,0 +1,9 @@
+{
+  "result": {
+    "response": "Hello there, friend",
+    "usage": {"prompt_tokens": 9, "completion_tokens": 5, "total_tokens": 14}
+  },
+  "success": true,
+  "errors": [],
+  "messages": []
+}

@@ -1,0 +1,1 @@
+clef-router: route each prompt to the affordable model when it is enough, and to the frontier model when it matters. OpenAI-compatible, powered by Cloudflare's Clef decision model.

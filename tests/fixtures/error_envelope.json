@@ -1,0 +1,6 @@
+{
+  "result": null,
+  "success": false,
+  "errors": [{"code": 7003, "message": "Invalid request headers"}],
+  "messages": []
+}

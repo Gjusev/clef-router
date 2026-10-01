@@ -1,0 +1,622 @@
+{
+  "meta": {
+    "mode": "mock",
+    "dataset": "C:\\Code Main\\clef-router\\evals\\data\\routing_bench.jsonl",
+    "package_version": "0.2.0",
+    "python": "3.10.11",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "generated_at": "2026-10-01T20:42:16+00:00",
+    "min_confidence": 0.45,
+    "notes": [
+      "mock mode measures the offline routing POLICY over committed fixtures; latency reflects library overhead only (no network)"
+    ]
+  },
+  "metrics": {
+    "n": 42,
+    "accuracy": 1.0,
+    "by_category": {
+      "greeting": {
+        "n": 3,
+        "correct": 3,
+        "accuracy": 1.0
+      },
+      "lookup": {
+        "n": 5,
+        "correct": 5,
+        "accuracy": 1.0
+      },
+      "translation": {
+        "n": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      "rewriting": {
+        "n": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      "summarization": {
+        "n": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      "simple_qa": {
+        "n": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      "low_confidence": {
+        "n": 3,
+        "correct": 3,
+        "accuracy": 1.0
+      },
+      "incident": {
+        "n": 3,
+        "correct": 3,
+        "accuracy": 1.0
+      },
+      "coding": {
+        "n": 4,
+        "correct": 4,
+        "accuracy": 1.0
+      },
+      "reasoning": {
+        "n": 4,
+        "correct": 4,
+        "accuracy": 1.0
+      },
+      "multi_step": {
+        "n": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      "creative": {
+        "n": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      "analysis": {
+        "n": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      "high_stakes": {
+        "n": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      "routine": {
+        "n": 3,
+        "correct": 3,
+        "accuracy": 1.0
+      },
+      "fail_safe": {
+        "n": 1,
+        "correct": 1,
+        "accuracy": 1.0
+      }
+    },
+    "escalations": {
+      "over_escalations": 0,
+      "under_routes": 0,
+      "escalation_precision": 1.0
+    },
+    "latency_ms": {
+      "p50": 0.122,
+      "p95": 0.264,
+      "p99": 0.472,
+      "mean": 0.149
+    },
+    "cost": {
+      "price_per_mtok_input_usd": 0.24,
+      "input_tokens_mean": 137.6,
+      "cost_per_1k_calls_usd": 0.033
+    }
+  },
+  "rows": [
+    {
+      "id": "greet-001",
+      "category": "greeting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.472,
+      "usage": {
+        "input_tokens": 96,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "greet-002",
+      "category": "greeting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.153,
+      "usage": {
+        "input_tokens": 104,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "greet-003",
+      "category": "greeting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.132,
+      "usage": {
+        "input_tokens": 88,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "lookup-001",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.133,
+      "usage": {
+        "input_tokens": 92,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "lookup-002",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.125,
+      "usage": {
+        "input_tokens": 98,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "lookup-003",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.122,
+      "usage": {
+        "input_tokens": 102,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "lookup-004",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.12,
+      "usage": {
+        "input_tokens": 94,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "lookup-005",
+      "category": "lookup",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.122,
+      "usage": {
+        "input_tokens": 106,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "translate-001",
+      "category": "translation",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.122,
+      "usage": {
+        "input_tokens": 100,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "translate-002",
+      "category": "translation",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.12,
+      "usage": {
+        "input_tokens": 118,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "rewrite-001",
+      "category": "rewriting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.116,
+      "usage": {
+        "input_tokens": 104,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "rewrite-002",
+      "category": "rewriting",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.115,
+      "usage": {
+        "input_tokens": 132,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "summarize-001",
+      "category": "summarization",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.122,
+      "usage": {
+        "input_tokens": 168,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "summarize-002",
+      "category": "summarization",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.115,
+      "usage": {
+        "input_tokens": 152,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "qa-001",
+      "category": "simple_qa",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.116,
+      "usage": {
+        "input_tokens": 112,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "qa-002",
+      "category": "simple_qa",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.115,
+      "usage": {
+        "input_tokens": 90,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "uncertain-001",
+      "category": "low_confidence",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.151,
+      "usage": {
+        "input_tokens": 128,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "uncertain-002",
+      "category": "low_confidence",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.117,
+      "usage": {
+        "input_tokens": 140,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "uncertain-003",
+      "category": "low_confidence",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.115,
+      "usage": {
+        "input_tokens": 118,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "urgent-001",
+      "category": "incident",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.11,
+      "usage": {
+        "input_tokens": 122,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "urgent-002",
+      "category": "incident",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.115,
+      "usage": {
+        "input_tokens": 130,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "urgent-003",
+      "category": "incident",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.112,
+      "usage": {
+        "input_tokens": 138,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "code-001",
+      "category": "coding",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.112,
+      "usage": {
+        "input_tokens": 164,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "code-002",
+      "category": "coding",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.119,
+      "usage": {
+        "input_tokens": 210,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "code-003",
+      "category": "coding",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.122,
+      "usage": {
+        "input_tokens": 186,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "code-004",
+      "category": "coding",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.114,
+      "usage": {
+        "input_tokens": 178,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "reason-001",
+      "category": "reasoning",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.114,
+      "usage": {
+        "input_tokens": 142,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "reason-002",
+      "category": "reasoning",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.119,
+      "usage": {
+        "input_tokens": 156,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "reason-003",
+      "category": "reasoning",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.116,
+      "usage": {
+        "input_tokens": 174,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "reason-004",
+      "category": "reasoning",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.114,
+      "usage": {
+        "input_tokens": 150,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "multi-001",
+      "category": "multi_step",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.12,
+      "usage": {
+        "input_tokens": 190,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "multi-002",
+      "category": "multi_step",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.126,
+      "usage": {
+        "input_tokens": 182,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "creative-001",
+      "category": "creative",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.435,
+      "usage": {
+        "input_tokens": 148,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "creative-002",
+      "category": "creative",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.264,
+      "usage": {
+        "input_tokens": 132,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "analysis-001",
+      "category": "analysis",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.24,
+      "usage": {
+        "input_tokens": 224,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "analysis-002",
+      "category": "analysis",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.202,
+      "usage": {
+        "input_tokens": 206,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "highstakes-001",
+      "category": "high_stakes",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.161,
+      "usage": {
+        "input_tokens": 168,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "highstakes-002",
+      "category": "high_stakes",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.131,
+      "usage": {
+        "input_tokens": 158,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "calm-001",
+      "category": "routine",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.132,
+      "usage": {
+        "input_tokens": 128,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "calm-002",
+      "category": "routine",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.133,
+      "usage": {
+        "input_tokens": 110,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "calm-003",
+      "category": "routine",
+      "expected": "cheap",
+      "tier": "cheap",
+      "correct": true,
+      "latency_ms": 0.205,
+      "usage": {
+        "input_tokens": 102,
+        "output_tokens": 12
+      }
+    },
+    {
+      "id": "failsafe-001",
+      "category": "fail_safe",
+      "expected": "frontier",
+      "tier": "frontier",
+      "correct": true,
+      "latency_ms": 0.124,
+      "usage": {
+        "input_tokens": 140,
+        "output_tokens": 12
+      }
+    }
+  ]
+}

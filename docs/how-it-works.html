@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How clef-router works</title>
+<style>
+  :root {
+    --bone:#F7F6F3; --card:#FFFFFF; --ink:#111111; --muted:#787774;
+    --line:#E6E4E0; --green-bg:#EDF3EC; --green-fg:#346538;
+    --red-bg:#FDEBEC; --red-fg:#9F2F2D; --blue-bg:#E1F3FE; --blue-fg:#1F6C9F;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bone); color: var(--ink);
+    font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+    display: grid; place-items: center; min-height: 100dvh; padding: 48px 24px;
+  }
+  main { max-width: 920px; width: 100%; }
+  .overline { font-family: Consolas, monospace; font-size: 13px; letter-spacing: .08em;
+              color: var(--muted); text-transform: uppercase; }
+  h1 { font-family: Georgia, serif; letter-spacing: -0.03em; font-size: 44px;
+       line-height: 1.08; margin: 10px 0 6px; }
+  .sub { color: var(--muted); max-width: 60ch; line-height: 1.6; }
+  .stage {
+    margin-top: 36px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 16px; padding: 32px; display: grid;
+    grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: center;
+  }
+  .prompt {
+    border: 1px solid var(--line); border-radius: 12px; background: var(--bone);
+    font-family: Consolas, monospace; font-size: 14px; padding: 14px 16px; min-height: 84px;
+  }
+  .prompt b { display: block; font-size: 11px; color: var(--muted);
+              letter-spacing: .08em; margin-bottom: 8px; font-weight: 600; }
+  .gate {
+    border-radius: 12px; background: var(--ink); color: var(--bone);
+    font-family: Consolas, monospace; font-weight: bold; padding: 18px 22px;
+    text-align: center; position: relative;
+  }
+  .gate small { display: block; font-weight: normal; color: #B9B7B2; font-size: 11px; margin-top: 6px; }
+  .dot {
+    position: absolute; top: -10px; left: 50%; width: 10px; height: 10px;
+    margin-left: -5px; border-radius: 50%; background: var(--blue-fg);
+    animation: drop 2.8s infinite;
+  }
+  @keyframes drop {
+    0%, 12% { transform: translate(-90px, 26px); opacity: 0; }
+    22% { transform: translate(-90px, 26px); opacity: 1; }
+    42% { transform: translate(0, 26px); opacity: 1; }
+    60% { transform: translate(0, 40px); opacity: 1; }
+    78%, 100% { transform: translate(0, 40px); opacity: 0; }
+  }
+  .tiers { display: grid; gap: 14px; }
+  .tier {
+    border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    font-family: Consolas, monospace; font-size: 13px; transition: opacity .3s;
+  }
+  .tier b { display: block; font-size: 14px; letter-spacing: .06em; margin-bottom: 4px; }
+  .cheap { background: var(--green-bg); border-color: var(--green-fg); color: var(--green-fg); }
+  .frontier { background: var(--red-bg); border-color: var(--red-fg); color: var(--red-fg); }
+  .tier .why { color: var(--muted); }
+  .trace {
+    grid-column: 1 / -1; font-family: Consolas, monospace; font-size: 12px;
+    color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px;
+  }
+  .trace em { font-style: normal; color: var(--ink); }
+  .demo { animation: switch 8.4s infinite; }
+  .demo.s2 { animation-delay: 2.8s; }
+  .demo.s3 { animation-delay: 5.6s; }
+  @keyframes switch {
+    0%, 100% { opacity: 0; transform: translateY(8px); }
+    6%, 88% { opacity: 1; transform: translateY(0); }
+  }
+  .scene { position: relative; }
+  .scene > * { position: absolute; inset: 0; }
+  .scene { min-height: 110px; }
+  .card { height: 100%; }
+  @media (prefers-reduced-motion: reduce) {
+    .dot, .demo { animation: none; }
+    .demo.s2, .demo.s3 { display: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="overline">How it works</p>
+  <h1>One call to Clef,<br>every prompt routed</h1>
+  <p class="sub">Your OpenAI client posts to <code>/v1/chat/completions</code>. clef-router
+  turns the last user message into a Clef state, asks one joint question set
+  (team + urgency), and answers with the tier decision. The completion model
+  is yours to call, exactly like laya-router.</p>
+
+  <section class="stage">
+    <div class="scene">
+      <div class="demo s1">
+        <div class="prompt card"><b>PROMPT 1 / 3</b>"Hi! What's the capital of France?"</div>
+      </div>
+      <div class="demo s2">
+        <div class="prompt card"><b>PROMPT 2 / 3</b>"Implement a token bucket rate limiter in Go."</div>
+      </div>
+      <div class="demo s3">
+        <div class="prompt card"><b>PROMPT 3 / 3</b>"Checkout is down for every customer right now."</div>
+      </div>
+    </div>
+    <div class="gate"><span class="dot"></span>CLEF<small>team + urgency,<br>one pass</small></div>
+    <div class="tiers">
+      <div class="tier cheap"><b>CHEAP</b><span class="why">routine, low stakes</span></div>
+      <div class="tier frontier"><b>FRONTIER</b><span class="why">code, incidents, reasoning</span></div>
+    </div>
+    <p class="trace">decisions:
+    <em>1) cheap, confidence 0.93</em> &nbsp; <em>2) frontier, code</em> &nbsp;
+    <em>3) frontier, urgent (noul 0.97)</em> &nbsp; gate: confidence &lt; 0.45 escalates</p>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "result": {
+    "model": "clef-flash",
+    "answers": {
+      "urgency": {"type": "noul", "noul": 0.87},
+      "team": {
+        "type": "choice",
+        "choice": "frontier",
+        "probabilities": {"cheap": 0.12, "frontier": 0.88},
+        "confidence": 0.88
+      }
+    },
+    "usage": {"input_tokens": 201, "output_tokens": 15}
+  },
+  "success": true,
+  "errors": [],
+  "messages": []
+}

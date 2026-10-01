@@ -50,6 +50,19 @@ class ClefDocumentCompressor(BaseDocumentCompressor):
     min_score: float = 1.0
     token_counter: Any = default_token_counter
 
+    def __init__(
+        self,
+        budget: int = 2048,
+        min_score: float = 1.0,
+        token_counter: Any = default_token_counter,
+        **kwargs: Any,
+    ) -> None:
+        """Set the options on both the pydantic and the plain base."""
+        super().__init__(**kwargs)
+        self.budget = budget
+        self.min_score = min_score
+        self.token_counter = token_counter
+
     def compress_documents(
         self,
         documents: Sequence[Document],

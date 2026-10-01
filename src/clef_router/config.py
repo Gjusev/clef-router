@@ -62,6 +62,7 @@ ENV_MODEL = "CLEF_MODEL"
 ENV_TIMEOUT = "CLEF_TIMEOUT"
 ENV_MAX_RETRIES = "CLEF_MAX_RETRIES"
 ENV_LOG_LEVEL = "CLEF_LOG_LEVEL"
+ENV_DECISION_LOG = "CLEF_DECISION_LOG"
 
 #: Clef question-selector values accepted in the request body.
 MODEL_SELECTOR_CLEF = "clef"
@@ -104,6 +105,8 @@ class RouterConfig:
             ``retry_backoff * 2**n``.
         log_level: Lower bound for the package logger, one of the standard
             Python level names.
+        decision_log: Optional path for the proxy's JSONL decision log; one
+            line per routing decision. Empty disables logging.
     """
 
     account_id: str
@@ -115,6 +118,7 @@ class RouterConfig:
     max_retries: int = DEFAULT_MAX_RETRIES
     retry_backoff: float = DEFAULT_RETRY_BACKOFF
     log_level: str = DEFAULT_LOG_LEVEL
+    decision_log: str | None = None
 
     @property
     def model_id(self) -> str:
@@ -200,6 +204,7 @@ class RouterConfig:
         max_retries: int | None = None,
         retry_backoff: float | None = None,
         log_level: str | None = None,
+        decision_log: str | None = None,
         environ: dict[str, str] | None = None,
     ) -> RouterConfig:
         """Build a validated config from explicit values, falling back to env.
@@ -253,19 +258,23 @@ class RouterConfig:
             )
             resolved_retries = DEFAULT_MAX_RETRIES if parsed is None else parsed
 
-        resolved_level = log_level
-        if resolved_level is None:
+        resolved_log_level = log_level
+        if resolved_log_level is None:
             raw_level = env.get(ENV_LOG_LEVEL)
             if raw_level is None:
-                resolved_level = DEFAULT_LOG_LEVEL
+                resolved_log_level = DEFAULT_LOG_LEVEL
             elif raw_level.upper() in VALID_LOG_LEVELS:
-                resolved_level = raw_level.upper()
+                resolved_log_level = raw_level.upper()
             else:
                 problems.append(
                     f"{ENV_LOG_LEVEL} must be one of "
                     f"{VALID_LOG_LEVELS}, got {raw_level!r}"
                 )
-                resolved_level = DEFAULT_LOG_LEVEL
+                resolved_log_level = DEFAULT_LOG_LEVEL
+
+        resolved_decision_log = decision_log
+        if resolved_decision_log is None:
+            resolved_decision_log = env.get(ENV_DECISION_LOG) or None
 
         config = cls(
             account_id=resolved_account,
@@ -280,7 +289,8 @@ class RouterConfig:
             retry_backoff=(
                 retry_backoff if retry_backoff is not None else DEFAULT_RETRY_BACKOFF
             ),
-            log_level=resolved_level,
+            log_level=resolved_log_level,
+            decision_log=resolved_decision_log,
         )
         problems.extend(config.validate())
         if problems:

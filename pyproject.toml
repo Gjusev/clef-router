@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "clef-router"
-version = "0.2.0"
+version = "0.3.0"
 description = "OpenAI-compatible proxy that routes prompts between cheap and frontier LLMs using Cloudflare's Clef decision model"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -81,3 +81,8 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Canvas-drawing script: PIL coordinates and inline SVG/HTML strings do not
+# wrap meaningfully at 88 columns.
+"scripts/generate_assets.py" = ["E501"]

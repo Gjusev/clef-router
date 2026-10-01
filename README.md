@@ -235,14 +235,28 @@ server's `Retry-After` once the budget is spent. Every HTTP-derived error
 carries the status code, the Cloudflare error code, and the `cf-ray` request
 id when present.
 
+## Operate the proxy
+
+```bash
+docker build -t clef-router .
+docker run -p 8000:8000 -e CLEF_ACCOUNT_ID=... -e CLEF_API_TOKEN=... clef-router
+```
+
+- `"stream": true` works: the decision arrives as OpenAI-shaped SSE chunks
+  (role, decision JSON, stop, `[DONE]`), and the `clef` extension rides in
+  the first chunk.
+- `GET /metrics` serves Prometheus text: `clef_router_requests_total`
+  by tier and status, plus a `clef_router_routing_seconds` histogram.
+- `CLEF_DECISION_LOG=/path/decisions.jsonl` appends one JSON line per
+  decision (tier, confidence, reason, latency, token usage, prompt
+  preview) for post-hoc calibration of the confidence gate.
+
 ## Limitations
 
 Stated plainly, because routing libraries that hide these waste your time.
 
 - The proxy decides; it does not complete. It never forwards your prompt to a
   chat model. Clients that want the answer call the chosen model themselves.
-- No streaming. `POST /v1/chat/completions` is request/response. SSE
-  pass-through is on the roadmap.
 - The committed policy number is accuracy on 42 labeled fixtures. The GPU
   rerun measures the real model on the same 42 prompts (92.9%), which is
   still a small set: neither number is a Decision-Index-grade benchmark. Use

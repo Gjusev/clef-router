@@ -209,6 +209,7 @@ class ChatCompletionRequest(BaseModel):
 
     model: str = "auto"
     messages: list[ChatMessage] = Field(min_length=1)
+    stream: bool = False
     clef_questions: dict[str, ClefQuestionSpec] | None = Field(
         default=None, max_length=MAX_QUESTIONS
     )

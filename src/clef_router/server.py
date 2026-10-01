@@ -32,12 +32,14 @@ from typing import Any
 import httpx
 import uvicorn
 from fastapi import FastAPI, Query
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse, StreamingResponse
 
 from ._version import __version__
 from .client import AsyncClefRouter
 from .config import RouterConfig
+from .decision_log import append_decision_log
 from .errors import ClefAPIError, ClefRateLimitError
+from .metrics import RouterMetrics
 from .schemas import (
     ChatCompletionRequest,
     DecideRequest,
@@ -167,6 +169,59 @@ def _completion_response(
     }
 
 
+def _sse(payload: dict[str, Any]) -> str:
+    """Format one Server-Sent Events data frame."""
+    return "data: " + json.dumps(payload, ensure_ascii=False) + "\n\n"
+
+
+def _streaming_response(
+    *,
+    model_selector: str,
+    routing: Any,
+    latency_ms: float,
+) -> StreamingResponse:
+    """Render the decision as an OpenAI-shaped SSE completion stream.
+
+    Three chunks (role, content, stop) followed by ``data: [DONE]``, so any
+    OpenAI SDK streaming client works unchanged. The clef extension rides in
+    the first chunk.
+    """
+    completion_id = f"chatcmpl-{uuid.uuid4().hex[:24]}"
+    created = int(time.time())
+
+    def chunk(
+        delta: dict[str, Any], finish_reason: str | None = None
+    ) -> dict[str, Any]:
+        return {
+            "id": completion_id,
+            "object": "chat.completion.chunk",
+            "created": created,
+            "model": model_selector,
+            "choices": [
+                {"index": 0, "delta": delta, "finish_reason": finish_reason}
+            ],
+        }
+
+    async def generate() -> AsyncIterator[str]:
+        first = chunk({"role": "assistant"})
+        first["clef"] = {
+            "tier": routing.tier,
+            "reason": routing.reason,
+            "latency_ms": latency_ms,
+            "router_version": __version__,
+        }
+        yield _sse(first)
+        yield _sse(chunk({"content": json.dumps(routing.to_dict())}))
+        yield _sse(chunk({}, finish_reason="stop"))
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(
+        generate(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
 def create_app(
     config: RouterConfig | None = None,
     *,
@@ -202,9 +257,12 @@ def create_app(
     app = FastAPI(title="clef-router", version=__version__, lifespan=lifespan)
     app.state.config = config
     app.state.router = router
+    app.state.metrics = metrics = RouterMetrics()
 
-    @app.post("/v1/chat/completions")
-    async def chat_completions(request: ChatCompletionRequest) -> JSONResponse:
+    @app.post("/v1/chat/completions", response_model=None)
+    async def chat_completions(
+        request: ChatCompletionRequest,
+    ) -> JSONResponse | StreamingResponse:
         """Route an OpenAI chat request through Clef and return the decision."""
         try:
             prompt = _last_user_text(request.messages)
@@ -224,7 +282,25 @@ def create_app(
             latency_ms = (time.perf_counter() - started) * 1000.0
         except ClefAPIError as exc:
             logger.warning("routing failed: %s", exc)
+            metrics.observe(
+                "error", (time.perf_counter() - started) * 1000.0, status="error"
+            )
             return _error_response(exc)
+        metrics.observe(routing.tier, latency_ms)
+        if config.decision_log:
+            append_decision_log(
+                config.decision_log,
+                routing=routing,
+                model_selector=config.model_selector,
+                latency_ms=latency_ms,
+                prompt=prompt,
+            )
+        if request.stream:
+            return _streaming_response(
+                model_selector=config.model_selector,
+                routing=routing,
+                latency_ms=latency_ms,
+            )
         return JSONResponse(
             _completion_response(
                 model_selector=config.model_selector,
@@ -238,9 +314,14 @@ def create_app(
         """Pass a native Clef request through and return typed answers."""
         state, questions, images = request.to_contract()
         try:
+            started = time.perf_counter()
             decision = await router.decide(state, questions, images)
+            metrics.observe("decide", (time.perf_counter() - started) * 1000.0)
         except ClefAPIError as exc:
             logger.warning("decide failed: %s", exc)
+            metrics.observe(
+                "decide", (time.perf_counter() - started) * 1000.0, status="error"
+            )
             return _error_response(exc)
         return JSONResponse(
             DecideResponse(
@@ -256,6 +337,11 @@ def create_app(
             "input_tokens": decision.usage.input_tokens,
             "output_tokens": decision.usage.output_tokens,
         }
+
+    @app.get("/metrics")
+    async def prometheus_metrics() -> PlainTextResponse:
+        """Prometheus text exposition of decision counters and latency."""
+        return PlainTextResponse(metrics.render())
 
     @app.get("/healthz")
     async def healthz(

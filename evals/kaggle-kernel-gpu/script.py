@@ -53,7 +53,10 @@ run(f"{sys.executable} -m pip install -q --no-input "
 
 import torch  # noqa: E402
 
-print(f"torch {torch.__version__}, cuda available: {torch.cuda.is_available()}", flush=True)
+print(
+    f"torch {torch.__version__}, cuda available: {torch.cuda.is_available()}",
+    flush=True,
+)
 if not torch.cuda.is_available():
     fail("torch sees no CUDA device; the GPU is not attached to this session.")
 
@@ -64,20 +67,23 @@ run(f"{sys.executable} -m pip install -q --no-input ./clef-router")
 sys.path.insert(0, "clef-router")
 sys.path.insert(0, str(Path("clef-router/src").resolve()))
 
-from clef_router.models import DEFAULT_QUESTIONS, derive_tier, parse_decision  # noqa: E402
-
 # 4. Download and load clef-flash in 4-bit on the first GPU. The release
 # loader pins device_map to a single device, so 4-bit is how 9.4B fits a
 # 16 GB T4 with room for activations. T4 has no native bf16; use fp16.
 from huggingface_hub import snapshot_download  # noqa: E402
 
+from clef_router.models import (  # noqa: E402
+    DEFAULT_QUESTIONS,
+    derive_tier,
+    parse_decision,
+)
+
 print("downloading Cloudflare/clef-flash (about 19 GB)...", flush=True)
 model_path = snapshot_download("Cloudflare/clef-flash")
 sys.path.insert(0, model_path)  # joint_schema_model.py ships with the weights
 
-from joint_schema_model import load_release_model, systemone  # noqa: E402
-
 import torch  # noqa: E402
+from joint_schema_model import load_release_model, systemone  # noqa: E402
 from transformers import BitsAndBytesConfig  # noqa: E402
 
 t0 = time.perf_counter()
@@ -164,8 +170,12 @@ correct = sum(1 for r in results if r["correct"])
 input_tokens = [r["usage"]["input_tokens"] for r in results]
 mean_tokens = sum(input_tokens) / len(input_tokens)
 frontier_expected = sum(1 for r in results if r["expected"] == "frontier")
-under_routes = sum(1 for r in results if r["tier"] == "cheap" and r["expected"] == "frontier")
-over_escalations = sum(1 for r in results if r["tier"] == "frontier" and r["expected"] == "cheap")
+under_routes = sum(
+    1 for r in results if r["tier"] == "cheap" and r["expected"] == "frontier"
+)
+over_escalations = sum(
+    1 for r in results if r["tier"] == "frontier" and r["expected"] == "cheap"
+)
 
 report = {
     "meta": {
@@ -212,7 +222,9 @@ report = {
     "rows": results,
 }
 out = Path("/kaggle/working/routing-gpu-eval.json")
-out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+out.write_text(
+    json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+)
 
 m = report["metrics"]
 print("=== Verdict ===", flush=True)
@@ -226,5 +238,8 @@ print(
 print(f"under-routes: {under_routes}  over-escalations: {over_escalations}", flush=True)
 wrong = [r for r in results if not r["correct"]]
 for r in wrong:
-    print(f"MISS {r['id']}: expected {r['expected']}, got {r['tier']} ({r['reason']})", flush=True)
+    print(
+        f"MISS {r['id']}: expected {r['expected']}, got {r['tier']} ({r['reason']})",
+        flush=True,
+    )
 print(f"wrote {out}", flush=True)

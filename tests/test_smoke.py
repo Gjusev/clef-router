@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import re
+
 import clef_router
 from clef_router import create_app
+from clef_router._version import __version__
 
 
-def test_package_exposes_version():
-    assert clef_router.__version__ == "0.2.0"
+def test_package_exposes_single_version_source():
+    assert clef_router.__version__ == __version__
+    assert re.fullmatch(r"\d+\.\d+\.\d+", clef_router.__version__)
 
 
 def test_public_surface_is_importable():

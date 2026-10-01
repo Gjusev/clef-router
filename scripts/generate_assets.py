@@ -426,7 +426,6 @@ def draw_frame(index: int) -> Image.Image:
         chosen_green = tier == "cheap"
         # connector line grows during first half of the slot
         grow = ease_out(min(1.0, phase * 1.8))
-        ty = 500 * s
         color = GREEN_FG if chosen_green else RED_FG
         mid_y = 430 * s
         x0, x1 = W // 2 * s, (880 if chosen_green else 880) * s
